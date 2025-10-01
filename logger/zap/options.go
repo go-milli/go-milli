@@ -1,25 +1,44 @@
 package zap
 
 import (
-	stdzap "go.uber.org/zap"
+	"github.com/go-milli/go-milli/logger"
+	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-
-	"worker/logger"
 )
 
-// WithConfig injects a zap.Config via logger.Options.Context.
-func WithConfig(cfg stdzap.Config) logger.Option { return logger.SetOption(configKey{}, cfg) }
-
-// WithEncoderConfig injects a zapcore.EncoderConfig via logger.Options.Context.
-func WithEncoderConfig(enc zapcore.EncoderConfig) logger.Option {
-	return logger.SetOption(encoderConfigKey{}, enc)
+type Options struct {
+	logger.Options
 }
 
-// WithOptions appends extra zap options via logger.Options.Context.
-func WithOptions(opts ...stdzap.Option) logger.Option { return logger.SetOption(optionsKey{}, opts) }
+type configKey struct{}
 
-// WithNamespace sets a zap namespace for subsequent fields.
-func WithNamespace(ns string) logger.Option { return logger.SetOption(namespaceKey{}, ns) }
+// WithConfig pass zap.Config to logger.
+func WithConfig(c zap.Config) logger.Option {
+	return logger.SetOption(configKey{}, c)
+}
 
-// WithZapLogger injects an existing *zap.Logger to be used directly.
-func WithZapLogger(z *stdzap.Logger) logger.Option { return logger.SetOption(loggerKey{}, z) }
+type encoderConfigKey struct{}
+
+// WithEncoderConfig pass zapcore.EncoderConfig to logger.
+func WithEncoderConfig(c zapcore.EncoderConfig) logger.Option {
+	return logger.SetOption(encoderConfigKey{}, c)
+}
+
+type namespaceKey struct{}
+
+func WithNamespace(namespace string) logger.Option {
+	return logger.SetOption(namespaceKey{}, namespace)
+}
+
+type optionsKey struct{}
+
+func WithOptions(opts ...zap.Option) logger.Option {
+	return logger.SetOption(optionsKey{}, opts)
+}
+
+type loggerKey struct{}
+
+// WithLogger pass zap.Logger to logger
+func WithLogger(zapLogger *zap.Logger) logger.Option {
+	return logger.SetOption(loggerKey{}, zapLogger)
+}

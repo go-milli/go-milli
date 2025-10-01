@@ -1,4 +1,4 @@
-// Package logger defines a micro-style logging abstraction and helpers.
+// Package logger defines a logging abstraction and helpers.
 package logger
 
 // DefaultLogger is the package default logger.
