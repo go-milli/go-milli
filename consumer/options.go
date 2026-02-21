@@ -2,7 +2,6 @@ package consumer
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/codec"
@@ -143,22 +142,11 @@ func SubscriberContext(ctx context.Context) SubscriberOption {
 // LoggingMiddleware is an example middleware that logs topic names
 func LoggingMiddleware(next Handler) Handler {
 	return func(ctx context.Context, msg Message) error {
-		fmt.Printf("[LOG] Processing message from topic: %s\n", msg.Topic)
+		logger.Infof("[LOG] Processing message from topic: %s", msg.Topic)
 		err := next(ctx, msg)
 		if err != nil {
-			fmt.Printf("[LOG] Error: %v\n", err)
+			logger.Errorf("[LOG] Error: %v", err)
 		}
-		return err
-	}
-}
-
-// TracingMiddleware is an example middleware that prints tracing headers
-func TracingMiddleware(next Handler) Handler {
-	return func(ctx context.Context, msg Message) error {
-		traceID := msg.Header["Trace-Id"]
-		fmt.Printf("[TRACE] %s - Start\n", traceID)
-		err := next(ctx, msg)
-		fmt.Printf("[TRACE] %s - End\n", traceID)
 		return err
 	}
 }

@@ -240,13 +240,7 @@ func (k *kBroker) String() string {
 }
 
 func NewBroker(opts ...broker.Option) broker.Broker {
-	options := broker.Options{
-		Context: context.Background(),
-	}
-
-	for _, o := range opts {
-		o(&options)
-	}
+	options := *broker.NewOptions(opts...)
 
 	var cAddrs []string
 	for _, addr := range options.Addrs {
