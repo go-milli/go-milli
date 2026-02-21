@@ -48,10 +48,10 @@ func (c *defaultConsumer) Subscribe(topic string, handler Handler, opts ...Subsc
 	if !ok {
 		return fmt.Errorf("invalid subscriber: expected *subscriber")
 	}
-	// Check if already subscribed
+	// Check if already subscribed with same topic AND same queue (consumer group)
 	for existing := range c.subscribers {
-		if existing.topic == topic && fmt.Sprintf("%p", existing.handler) == fmt.Sprintf("%p", handler) {
-			return fmt.Errorf("already subscribed to topic %s with this handler", topic)
+		if existing.topic == topic && existing.Options().Queue == sub.Options().Queue {
+			return fmt.Errorf("already subscribed to topic %s with queue %s", topic, sub.Options().Queue)
 		}
 	}
 
@@ -93,6 +93,9 @@ func (c *defaultConsumer) Start() error {
 
 		if queue := sub.Options().Queue; len(queue) > 0 {
 			brokerOpts = append(brokerOpts, broker.Queue(queue))
+		} else {
+			// Default consumer group = service name, so multiple instances share the same group
+			brokerOpts = append(brokerOpts, broker.Queue(c.opts.Name))
 		}
 
 		if ctx := sub.Options().Context; ctx != nil {

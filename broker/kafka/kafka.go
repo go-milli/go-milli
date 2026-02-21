@@ -10,8 +10,6 @@ import (
 
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/logger"
-
-	"github.com/google/uuid"
 )
 
 type kBroker struct {
@@ -192,13 +190,7 @@ func (k *kBroker) getSaramaConsumerGroup(groupID string) (sarama.ConsumerGroup, 
 }
 
 func (k *kBroker) Subscribe(topic string, handler broker.Handler, opts ...broker.SubscribeOption) (broker.Subscriber, error) {
-	opt := broker.SubscribeOptions{
-		AutoAck: true,
-		Queue:   uuid.New().String(),
-	}
-	for _, o := range opts {
-		o(&opt)
-	}
+	opt := broker.NewSubscribeOptions(opts...)
 	// we need to create a new client per consumer
 	cg, err := k.getSaramaConsumerGroup(opt.Queue)
 	if err != nil {
