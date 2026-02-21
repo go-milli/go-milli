@@ -14,3 +14,9 @@ type Metadata map[string]string
 func NewContext(ctx context.Context, md Metadata) context.Context {
 	return context.WithValue(ctx, metadataKey{}, md)
 }
+
+// FromContext returns metadata from the given context.
+func FromContext(ctx context.Context) (Metadata, bool) {
+	md, ok := ctx.Value(metadataKey{}).(Metadata)
+	return md, ok
+}

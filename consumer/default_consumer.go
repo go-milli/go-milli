@@ -1,14 +1,11 @@
 package consumer
 
 import (
-	"context"
 	"fmt"
-	"runtime/debug"
 	"sync"
 
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/logger"
-	"github.com/go-milli/go-milli/metadata.go"
 )
 
 // defaultConsumer implementation
@@ -21,6 +18,9 @@ type defaultConsumer struct {
 	sync.RWMutex
 	// marks the consumer as started
 	started bool
+
+	// wg is used for graceful draining of active handlers
+	wg sync.WaitGroup
 }
 
 // NewDefaultConsumer creates a new consumer
@@ -36,23 +36,18 @@ func (c *defaultConsumer) Subscribe(topic string, handler Handler, opts ...Subsc
 	c.Lock()
 	defer c.Unlock()
 
+	// Apply subscriber wrappers
+	fn := handler
+	for i := len(c.opts.SubscriberWrappers); i > 0; i-- {
+		fn = c.opts.SubscriberWrappers[i-1](fn)
+	}
+
 	// Create subscription options
-	options := SubscriberOptions{
-		AutoAck: true,
-		Context: context.Background(),
+	sb := newSubscriber(topic, fn, opts...)
+	sub, ok := sb.(*subscriber)
+	if !ok {
+		return fmt.Errorf("invalid subscriber: expected *subscriber")
 	}
-
-	for _, o := range opts {
-		o(&options)
-	}
-
-	// Create subscription
-	sub := &subscriber{
-		topic:   topic,
-		handler: handler,
-		opts:    options,
-	}
-
 	// Check if already subscribed
 	for existing := range c.subscribers {
 		if existing.topic == topic && fmt.Sprintf("%p", existing.handler) == fmt.Sprintf("%p", handler) {
@@ -150,6 +145,15 @@ func (c *defaultConsumer) Stop() error {
 	wg.Wait()
 	c.Unlock()
 	c.started = false
+
+	// 死死扛住，等待所有正在处理的 handler 任务优雅泄流完毕后再完全关闭
+	c.wg.Wait()
+
+	// 断开 broker 底层连接
+	if err := c.opts.Broker.Disconnect(); err != nil {
+		c.opts.Logger.Logf(logger.ErrorLevel, "Broker disconnect error: %v", err)
+	}
+
 	return nil
 }
 
@@ -165,36 +169,4 @@ func (c *defaultConsumer) Options() Options {
 // String returns the consumer name
 func (c *defaultConsumer) String() string {
 	return c.opts.Name
-}
-
-// createSubHandler wraps user handler as broker.Handler
-func (c *defaultConsumer) createSubHandler(sub *subscriber) broker.Handler {
-	return func(e broker.Event) (err error) {
-		defer func() {
-			if r := recover(); r != nil {
-				c.opts.Logger.Logf(logger.ErrorLevel, "panic recovered: %v", r)
-				c.opts.Logger.Logf(logger.ErrorLevel, string(debug.Stack()))
-				err = fmt.Errorf("%s: panic recovered: %v", c.opts.Name, r)
-			}
-		}()
-
-		msg := e.Message()
-		// if we don't have headers, create empty map
-		if msg.Header == nil {
-			msg.Header = make(map[string]string)
-		}
-		// Create consumer message
-		consumerMsg := Message{
-			Topic:  e.Topic(),
-			Header: msg.Header,
-			Body:   msg.Body,
-		}
-
-		// Create context with headers
-		ctx := metadata.NewContext(context.Background(), msg.Header)
-
-		handler := sub.handler
-		// Call user handler
-		return handler(ctx, consumerMsg)
-	}
 }

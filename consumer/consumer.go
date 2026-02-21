@@ -30,11 +30,16 @@ type Consumer interface {
 // Handler processes messages
 type Handler func(ctx context.Context, msg Message) error
 
+// SubscriberWrapper is a middleware interface for message processing
+type SubscriberWrapper func(Handler) Handler
+
 // Message wraps broker message
 type Message struct {
 	Topic  string
 	Header map[string]string
 	Body   []byte
+	// Ack is a closure that allows the user to manually acknowledge the message
+	Ack func() error
 }
 
 type Subscriber interface {
