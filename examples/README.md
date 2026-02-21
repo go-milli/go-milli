@@ -23,3 +23,9 @@ Shows how to turn off native `AutoAck`, use the `consumer.ContextAckWrapper`, an
 An explicit demonstration showing exactly how the built-in `sync.WaitGroup` prevents your running worker goroutines from being killed instantly when `SIGTERM` (Ctrl+C) is received.
 
 - `cd graceful && go run main.go`
+
+## 5. `trace`
+Demonstrates how to plug in the standard `go.opentelemetry.io` packages through our newly refactored `wrapper.go`.
+Run this to observe how the `TraceID` flawlessly propagates downstream over the message broker bounds (with stdout span exporter).
+
+- `cd trace && go run main.go`

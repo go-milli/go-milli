@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/metadata.go"
+	"github.com/go-milli/go-milli/metadata"
 )
 
 type defaultPublisher struct {
@@ -32,16 +32,11 @@ func (p *defaultPublisher) Options() Options {
 }
 
 func (p *defaultPublisher) Publish(ctx context.Context, msg Message, opts ...PublishOption) error {
-	options := NewPublishOptions(opts...)
+	_ = NewPublishOptions(opts...)
 
-	// 如果 PublishOption 里的 Context 为空，则回退使用传入的 Context
-	if options.Context == nil {
-		options.Context = ctx
-	}
-
-	// 1. 从 context 中提取 metadata 作为 headers
+	// 1. 从原生的首位参数 ctx 中提取 metadata 作为 headers
 	var headers map[string]string
-	if md, ok := metadata.FromContext(options.Context); ok {
+	if md, ok := metadata.FromContext(ctx); ok {
 		headers = make(map[string]string, len(md))
 		for k, v := range md {
 			headers[k] = v

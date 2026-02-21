@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/logger"
-	"github.com/go-milli/go-milli/metadata.go"
+	"github.com/go-milli/go-milli/metadata"
 )
 
 // subscriber represents a topic subscription

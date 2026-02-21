@@ -1,8 +1,6 @@
 package publisher
 
 import (
-	"context"
-
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/codec"
 	"github.com/go-milli/go-milli/codec/json"
@@ -75,27 +73,18 @@ func WrapPublisher(w ...Wrapper) Option {
 
 // PublishOptions for individual publish calls
 type PublishOptions struct {
-	Context context.Context
+	// Add other options here if necessary
 }
 
 type PublishOption func(*PublishOptions)
 
 // NewPublishOptions creates publish options
 func NewPublishOptions(opts ...PublishOption) PublishOptions {
-	options := PublishOptions{
-		Context: context.Background(),
-	}
+	options := PublishOptions{}
 
 	for _, o := range opts {
 		o(&options)
 	}
 
 	return options
-}
-
-// PublishContext sets the context
-func PublishContext(ctx context.Context) PublishOption {
-	return func(o *PublishOptions) {
-		o.Context = ctx
-	}
 }
