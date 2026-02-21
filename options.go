@@ -1,11 +1,11 @@
 package milli
 
 import (
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/codec"
-	"github.com/go-milli/go-milli/codec/json"
-	"github.com/go-milli/go-milli/consumer"
-	"github.com/go-milli/go-milli/publisher"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/codec"
+	"github.com/aevumio/go-milli/codec/json"
+	"github.com/aevumio/go-milli/consumer"
+	"github.com/aevumio/go-milli/publisher"
 )
 
 type Options struct {

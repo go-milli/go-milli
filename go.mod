@@ -1,4 +1,4 @@
-module github.com/go-milli/go-milli
+module github.com/aevumio/go-milli
 
 go 1.25
 

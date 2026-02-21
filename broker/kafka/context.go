@@ -3,7 +3,7 @@ package kafka
 import (
 	"context"
 
-	"github.com/go-milli/go-milli/broker"
+	"github.com/aevumio/go-milli/broker"
 )
 
 // setSubscribeOption returns a function to setup a context with given value.

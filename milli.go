@@ -3,8 +3,8 @@ package milli
 import (
 	"context"
 
-	"github.com/go-milli/go-milli/consumer"
-	"github.com/go-milli/go-milli/publisher"
+	"github.com/aevumio/go-milli/consumer"
+	"github.com/aevumio/go-milli/publisher"
 )
 
 // Service 是顶级容器门面接口

@@ -4,8 +4,8 @@ import (
 	"context"
 	"crypto/tls"
 
-	"github.com/go-milli/go-milli/codec"
-	"github.com/go-milli/go-milli/logger"
+	"github.com/aevumio/go-milli/codec"
+	"github.com/aevumio/go-milli/logger"
 )
 
 type Option func(*Options)

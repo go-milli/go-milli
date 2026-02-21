@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/logger"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/logger"
 )
 
 // defaultConsumer implementation

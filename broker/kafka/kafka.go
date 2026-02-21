@@ -8,8 +8,8 @@ import (
 
 	"github.com/IBM/sarama"
 
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/logger"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/logger"
 )
 
 type kBroker struct {

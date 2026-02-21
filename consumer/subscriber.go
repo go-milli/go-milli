@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/logger"
-	"github.com/go-milli/go-milli/metadata"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/logger"
+	"github.com/aevumio/go-milli/metadata"
 )
 
 // subscriber represents a topic subscription

@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/go-milli/go-milli"
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/broker/kafka"
-	"github.com/go-milli/go-milli/logger"
-	zaplogger "github.com/go-milli/go-milli/logger/zap"
-	"github.com/go-milli/go-milli/wrapper/trace/otel"
+	"github.com/aevumio/go-milli"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/broker/kafka"
+	"github.com/aevumio/go-milli/logger"
+	zaplogger "github.com/aevumio/go-milli/logger/zap"
+	"github.com/aevumio/go-milli/wrapper/trace/otel"
 
 	stdotel "go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"

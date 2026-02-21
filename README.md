@@ -50,9 +50,9 @@ Go-Milli is an enterprise-grade, message-driven microservice framework in Go. It
 ### 1. Initialize the Service
 ```go
 import (
-	"github.com/go-milli/go-milli"
-	"github.com/go-milli/go-milli/broker/kafka"
-	"github.com/go-milli/go-milli/broker"
+	"github.com/aevumio/go-milli"
+	"github.com/aevumio/go-milli/broker/kafka"
+	"github.com/aevumio/go-milli/broker"
 )
 
 func main() {
@@ -108,7 +108,7 @@ Go-Milli provides native wrappers to inject powerful behavior. You can chain as 
 #### 1. Tracing (OpenTelemetry)
 Automatically propagates traces over message queues:
 ```go
-import "github.com/go-milli/go-milli/wrapper/trace/otel"
+import "github.com/aevumio/go-milli/wrapper/trace/otel"
 
 srv := milli.NewService(
 	// ...
@@ -120,7 +120,7 @@ srv := milli.NewService(
 #### 2. Metrics (Prometheus)
 Records publishing and subscribing durations, and count errors/success rates:
 ```go
-import promwrapper "github.com/go-milli/go-milli/wrapper/metrics/prometheus"
+import promwrapper "github.com/aevumio/go-milli/wrapper/metrics/prometheus"
 
 srv := milli.NewService(
 	// ...
@@ -132,7 +132,7 @@ srv := milli.NewService(
 #### 3. Automatic Retries & DLQ
 If your handler returns an `error`, the message will automatically be retried. If retries are exhausted, it will be sent to a DLQ (Dead Letter Queue) topic.
 ```go
-import "github.com/go-milli/go-milli/wrapper/retry"
+import "github.com/aevumio/go-milli/wrapper/retry"
 
 srv := milli.NewService(
 	// ...
@@ -181,7 +181,7 @@ handler := func(ctx context.Context, msg *MyMsg) error {
 Go-Milli makes it trivial to spin up an HTTP gateway that publishes messages downstream:
 
 ```go
-import "github.com/go-milli/go-milli/web"
+import "github.com/aevumio/go-milli/web"
 
 s := web.NewService(
 	web.Name("api.gateway"),

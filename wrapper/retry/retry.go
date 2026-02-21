@@ -5,9 +5,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/consumer"
-	"github.com/go-milli/go-milli/logger"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/consumer"
+	"github.com/aevumio/go-milli/logger"
 )
 
 // Options configures the retry middleware.

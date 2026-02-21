@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/metadata"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/metadata"
 )
 
 type defaultPublisher struct {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/go-milli/go-milli/metadata"
+	"github.com/aevumio/go-milli/metadata"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/baggage"
 	"go.opentelemetry.io/otel/propagation"
@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	instrumentationName = "github.com/go-milli/go-milli/wrapper/trace/otel"
+	instrumentationName = "github.com/aevumio/go-milli/wrapper/trace/otel"
 )
 
 // StartSpanFromContext returns a new span with the given operation name and options. If a span

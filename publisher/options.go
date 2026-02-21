@@ -1,10 +1,10 @@
 package publisher
 
 import (
-	"github.com/go-milli/go-milli/broker"
-	"github.com/go-milli/go-milli/codec"
-	"github.com/go-milli/go-milli/codec/json"
-	"github.com/go-milli/go-milli/logger"
+	"github.com/aevumio/go-milli/broker"
+	"github.com/aevumio/go-milli/codec"
+	"github.com/aevumio/go-milli/codec/json"
+	"github.com/aevumio/go-milli/logger"
 )
 
 type Options struct {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/go-milli/go-milli/consumer"
-	"github.com/go-milli/go-milli/publisher"
+	"github.com/aevumio/go-milli/consumer"
+	"github.com/aevumio/go-milli/publisher"
 	"go.opentelemetry.io/otel/codes"
 	"go.opentelemetry.io/otel/trace"
 )
