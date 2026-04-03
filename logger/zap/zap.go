@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/aevumio/go-milli/logger"
 	"go.uber.org/zap"
@@ -34,6 +35,9 @@ func (l *zaplog) Init(opts ...logger.Option) error {
 
 	if zcconfig, ok := l.opts.Context.Value(encoderConfigKey{}).(zapcore.EncoderConfig); ok {
 		zapConfig.EncoderConfig = zcconfig
+	}
+	zapConfig.EncoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
+		enc.AppendString(t.In(time.Local).Format("2006-01-02 15:04:05.000"))
 	}
 
 	// Set log Level if not default
