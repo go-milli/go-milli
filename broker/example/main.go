@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/broker/kafka"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/broker/kafka"
 )
 
 func main() {

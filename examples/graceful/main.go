@@ -7,9 +7,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/aevumio/go-milli"
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/broker/kafka"
+	"github.com/go-milli/go-milli"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/broker/kafka"
 )
 
 type ProcessTask struct {

@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/aevumio/go-milli"
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/broker/kafka"
-	"github.com/aevumio/go-milli/logger"
-	zaplogger "github.com/aevumio/go-milli/logger/zap"
-	"github.com/aevumio/go-milli/web"
-	promwrapper "github.com/aevumio/go-milli/wrapper/metrics/prometheus"
+	"github.com/go-milli/go-milli"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/broker/kafka"
+	"github.com/go-milli/go-milli/logger"
+	zaplogger "github.com/go-milli/go-milli/logger/zap"
+	"github.com/go-milli/go-milli/web"
+	promwrapper "github.com/go-milli/go-milli/wrapper/metrics/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 

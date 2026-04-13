@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/aevumio/go-milli/logger"
-	"github.com/aevumio/go-milli/publisher"
+	"github.com/go-milli/go-milli/logger"
+	"github.com/go-milli/go-milli/publisher"
 )
 
 // Service wraps gin.Engine with optional Publisher and standard middleware.

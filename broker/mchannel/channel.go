@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/logger"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/logger"
 	"github.com/google/uuid"
 )
 

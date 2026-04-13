@@ -5,9 +5,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/aevumio/go-milli/consumer"
-	"github.com/aevumio/go-milli/logger"
-	"github.com/aevumio/go-milli/publisher"
+	"github.com/go-milli/go-milli/consumer"
+	"github.com/go-milli/go-milli/logger"
+	"github.com/go-milli/go-milli/publisher"
 )
 
 type service struct {

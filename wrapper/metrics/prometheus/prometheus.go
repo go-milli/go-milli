@@ -5,8 +5,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/aevumio/go-milli/consumer"
-	"github.com/aevumio/go-milli/publisher"
+	"github.com/go-milli/go-milli/consumer"
+	"github.com/go-milli/go-milli/publisher"
 	"github.com/prometheus/client_golang/prometheus"
 )
 

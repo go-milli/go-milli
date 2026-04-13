@@ -1,8 +1,8 @@
 package web
 
 import (
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/publisher"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/publisher"
 )
 
 // Options for the web service.

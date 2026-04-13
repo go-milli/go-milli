@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/aevumio/go-milli/logger"
+	"github.com/go-milli/go-milli/logger"
 	"github.com/google/uuid"
 )
 

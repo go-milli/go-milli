@@ -1,7 +1,7 @@
 package zap
 
 import (
-	"github.com/aevumio/go-milli/logger"
+	"github.com/go-milli/go-milli/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

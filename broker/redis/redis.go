@@ -23,8 +23,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/aevumio/go-milli/broker"
-	"github.com/aevumio/go-milli/logger"
+	"github.com/go-milli/go-milli/broker"
+	"github.com/go-milli/go-milli/logger"
 	"github.com/redis/go-redis/v9"
 )
 

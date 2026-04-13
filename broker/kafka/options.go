@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/IBM/sarama"
-	"github.com/aevumio/go-milli/broker"
+	"github.com/go-milli/go-milli/broker"
 )
 
 var (
