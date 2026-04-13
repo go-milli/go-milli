@@ -1,1 +1,16 @@
 /.idea/
+
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+main
+
+# Test binary
+*.test
+
+# Go build output
+/bin/
+/dist/
