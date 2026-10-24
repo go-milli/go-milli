@@ -1,5 +1,37 @@
 # Go-Milli 🚀
 
+## Reliability and deployment settings
+
+- **Redis broker requires Redis 6.2+** for pending-message recovery using
+  `XAUTOCLAIM`. Successful handlers are acknowledged by default;
+  `broker.DisableAutoAck()` keeps explicit acknowledgement under your control.
+- Failed or abandoned deliveries are reclaimed after one minute of inactivity,
+  with recovery scans every second. Configure these using
+  `redis.WithClaimMinIdle(duration)` and `redis.WithClaimInterval(duration)`.
+  Both durations and `WithBatchCount` must be positive. Blocking reads are
+  capped at the claim interval so recovery continues even without new traffic.
+- Set the idle threshold above the longest processing/acknowledgement delay,
+  including messages waiting in a batch. Delivery is **at least once**:
+  handlers must be idempotent, and Redis persistence must be configured for
+  your durability requirements. Without a successful ACK or successful dead-letter
+  transfer, failed messages remain eligible for recovery.
+- The retry middleware reports failure when a dead-letter publish fails;
+  it only reports success after the broker accepts the dead-letter publish.
+  For durable handoff, use a broker configuration that confirms publication,
+  rather than an asynchronous enqueue-only publisher. Cancellation interrupts
+  backoff without moving the message to the dead-letter queue.
+- HTTP defaults are: read headers **5s**, entire request **30s**, response write
+  **30s**, idle keep-alive **60s**. Override with `web.ReadHeaderTimeout`,
+  `web.ReadTimeout`, `web.WriteTimeout`, and `web.IdleTimeout`. Uploads and
+  streaming endpoints may need longer limits. Zero follows `net/http`
+  semantics: header/idle timeout fall back to ReadTimeout, while zero
+  ReadTimeout/WriteTimeout disables those deadlines.
+
+Run `go test ./...` and `go test -race ./...` for regression checks. Redis tests
+use an in-process miniredis server; HTTP tests start a child process. Both bind
+only to loopback addresses and require no external service. These tests do not
+replace deployment checks against your actual Redis configuration.
+
 Go-Milli is an enterprise-grade, message-driven microservice framework in Go. It simplifies building asynchronous and streaming applications by providing powerful abstractions over brokers (like Kafka or In-Memory), strongly-typed Pub/Sub, and an onion-ring middleware architecture.
 
 ## 🔥 Key Features

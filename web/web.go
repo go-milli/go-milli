@@ -71,8 +71,12 @@ func (s *Service) Run() error {
 	}
 
 	srv := &http.Server{
-		Addr:    s.opts.Address,
-		Handler: s.engine,
+		Addr:              s.opts.Address,
+		Handler:           s.engine,
+		ReadHeaderTimeout: s.opts.ReadHeaderTimeout,
+		ReadTimeout:       s.opts.ReadTimeout,
+		WriteTimeout:      s.opts.WriteTimeout,
+		IdleTimeout:       s.opts.IdleTimeout,
 	}
 
 	logger.Infof("Starting [web] %s on %s", s.opts.Name, s.opts.Address)
@@ -88,6 +92,7 @@ func (s *Service) Run() error {
 	// Wait for interrupt signal
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	defer signal.Stop(quit)
 
 	select {
 	case err := <-errCh:

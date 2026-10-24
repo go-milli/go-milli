@@ -3,6 +3,8 @@ package retry
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/go-milli/go-milli/broker"
@@ -83,6 +85,9 @@ func NewSubscriberWrapper(opts ...Option) consumer.SubscriberWrapper {
 			var lastErr error
 
 			for attempt := 0; attempt <= options.MaxRetries; attempt++ {
+				if err := ctx.Err(); err != nil {
+					return err
+				}
 				lastErr = next(ctx, msg)
 				if lastErr == nil {
 					return nil // Success!
@@ -102,7 +107,13 @@ func NewSubscriberWrapper(opts ...Option) consumer.SubscriberWrapper {
 				logger.Infof("[Retry] attempt %d/%d failed for topic %s, retrying in %v: %v",
 					attempt+1, options.MaxRetries, msg.Topic, backoff, lastErr)
 
-				time.Sleep(backoff)
+				timer := time.NewTimer(backoff)
+				select {
+				case <-ctx.Done():
+					timer.Stop()
+					return ctx.Err()
+				case <-timer.C:
+				}
 			}
 
 			// All retries exhausted
@@ -110,8 +121,15 @@ func NewSubscriberWrapper(opts ...Option) consumer.SubscriberWrapper {
 
 			// Send to DLQ if configured
 			if options.DLQTopic != "" && options.DLQBroker != nil {
+				if err := ctx.Err(); err != nil {
+					return err
+				}
+				headers := make(map[string]string, len(msg.Header)+2)
+				for key, value := range msg.Header {
+					headers[key] = value
+				}
 				dlqMsg := &broker.Message{
-					Header: msg.Header,
+					Header: headers,
 					Body:   msg.Body,
 				}
 				dlqMsg.Header["X-Original-Topic"] = msg.Topic
@@ -119,6 +137,7 @@ func NewSubscriberWrapper(opts ...Option) consumer.SubscriberWrapper {
 
 				if err := options.DLQBroker.Publish(options.DLQTopic, dlqMsg); err != nil {
 					logger.Errorf("[Retry] failed to publish to DLQ %s: %v", options.DLQTopic, err)
+					return errors.Join(lastErr, fmt.Errorf("publish to DLQ %s: %w", options.DLQTopic, err))
 				} else {
 					logger.Infof("[Retry] message forwarded to DLQ: %s", options.DLQTopic)
 				}

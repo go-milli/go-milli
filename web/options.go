@@ -1,6 +1,8 @@
 package web
 
 import (
+	"time"
+
 	"github.com/go-milli/go-milli/broker"
 	"github.com/go-milli/go-milli/publisher"
 )
@@ -12,15 +14,23 @@ type Options struct {
 	Mode              string // gin mode: "debug" / "release" / "test"
 	Broker            broker.Broker
 	PublisherWrappers []publisher.Wrapper
+	ReadHeaderTimeout time.Duration
+	ReadTimeout       time.Duration
+	WriteTimeout      time.Duration
+	IdleTimeout       time.Duration
 }
 
 type Option func(*Options)
 
 func newOptions(opts ...Option) Options {
 	o := Options{
-		Name:    "milli.web",
-		Address: ":8080",
-		Mode:    "release",
+		Name:              "milli.web",
+		Address:           ":8080",
+		Mode:              "release",
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       30 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
 	}
 	for _, opt := range opts {
 		opt(&o)
@@ -53,4 +63,28 @@ func WrapPublisher(w ...publisher.Wrapper) Option {
 	return func(o *Options) {
 		o.PublisherWrappers = append(o.PublisherWrappers, w...)
 	}
+}
+
+// ReadHeaderTimeout limits how long a client may take to send HTTP headers.
+// Default: 5 seconds. Zero disables the deadline (subject to ReadTimeout).
+func ReadHeaderTimeout(d time.Duration) Option {
+	return func(o *Options) { o.ReadHeaderTimeout = d }
+}
+
+// ReadTimeout limits reading the entire request, including its body.
+// Default: 30 seconds. Adjust for uploads; zero disables the deadline.
+func ReadTimeout(d time.Duration) Option {
+	return func(o *Options) { o.ReadTimeout = d }
+}
+
+// WriteTimeout limits writing a response. Default: 30 seconds.
+// Streaming endpoints may need a longer timeout or zero to disable it.
+func WriteTimeout(d time.Duration) Option {
+	return func(o *Options) { o.WriteTimeout = d }
+}
+
+// IdleTimeout limits idle keep-alive connections. Default: 60 seconds.
+// Zero falls back to ReadTimeout, following net/http semantics.
+func IdleTimeout(d time.Duration) Option {
+	return func(o *Options) { o.IdleTimeout = d }
 }

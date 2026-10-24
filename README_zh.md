@@ -1,5 +1,29 @@
 # Go-Milli 🚀
 
+## 可靠性与部署配置
+
+- **Redis broker 要求 Redis 6.2+**，通过 `XAUTOCLAIM` 回收待确认消息。
+  Handler 成功后默认自动确认；使用 `broker.DisableAutoAck()` 可改为手动确认。
+- 失败或消费者退出后遗留的消息，默认空闲一分钟后可以回收，每秒扫描一次。
+  可通过 `redis.WithClaimMinIdle(duration)`、`redis.WithClaimInterval(duration)`
+  配置；两个时长及 `WithBatchCount` 必须为正数。阻塞读取时间最多为扫描间隔，
+  保证没有新消息时也能继续回收。
+- 空闲阈值应大于最长处理、确认时间，包括消息在批次中等待处理的时间。
+  消息可能重复投递，**业务 Handler 必须幂等**，Redis 持久化也需按部署要求配置。
+  未成功确认或未成功转入死信队列的消息，会继续等待回收处理。
+- 重试耗尽后，死信发送失败会返回错误；只有 broker 接受死信发送后才返回成功。
+  关键任务应采用能确认发送结果的 broker 配置，不能把异步入队当成持久化成功。
+  Context 取消会中断退避等待，不会因此将消息移入死信队列。
+- HTTP 默认超时：请求头 **5 秒**、整个请求读取 **30 秒**、响应写入 **30 秒**、
+  空闲连接 **60 秒**。通过 `web.ReadHeaderTimeout`、`web.ReadTimeout`、
+  `web.WriteTimeout`、`web.IdleTimeout` 调整，上传及流式接口需按实际情况配置。
+  零值遵循 `net/http` 语义：请求头和空闲连接超时回退到 ReadTimeout；
+  ReadTimeout、WriteTimeout 为零则禁用对应超时。
+
+验证命令：`go test ./...`、`go test -race ./...`。Redis 测试使用进程内 miniredis，
+HTTP 测试启动子进程，均只监听本机回环地址，无需外部服务；上线前仍需针对实际
+Redis 版本和持久化配置做部署验证。
+
 Go-Milli 是一个专为 Go 语言打造的企业级、基于消息驱动的微服务框架。它通过提供对底层 Broker（如 Kafka 或内存队列）的强大抽象、强类型的发布/订阅模型，以及基于洋葱圈模型的中间件架构，极大简化了异步和流式数据处理应用的开发。
 
 ## 🔥 核心特性
